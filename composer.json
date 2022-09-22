@@ -1,0 +1,19 @@
+{
+    "name": "digital-union/dusdk",
+    "description": "Digital Union company official SDK.",
+    "license": "Apache-2.0",
+    "require": {
+        "php": ">=7.0",
+        "guzzlehttp/guzzle": "^7.5",
+        "ext-zlib": "*",
+        "ext-json": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "DigitalUnion\\": "src/"
+        },
+        "files": [
+            "src/const.php"
+        ]
+    }
+}
