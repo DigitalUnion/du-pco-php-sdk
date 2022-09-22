@@ -2,7 +2,7 @@
 
 ## Install
 ```
-composer require digital-union/dusdk
+composer require digital-union/dupco
 ```
 
 ## Usage
