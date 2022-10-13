@@ -6,41 +6,62 @@ class Encrypt
 {
     /**
      * @param $data string
-     * @param $secretVal string
-     * @return string
-     */
-    public function encode($data, $secretVal)
-    {
-        return $this->exclusiveOr(zlib_encode($data), $secretVal);
-    }
-
-    /**
-     * @param $data string
-     * @param $secretVal string
+     * @param $key string should be the AES key, either 16, 24, or 32 bytes to select
      * @return false|string
      */
-    public function decode($data, $secretVal)
+    public function encode($data, $key)
     {
-        return zlib_decode($this->exclusiveOr($data, $secretVal));
+        return $this->aesEncrypt($this->str2bytes(zlib_encode($data, ZLIB_ENCODING_DEFLATE)), $this->str2bytes($key));
     }
 
     /**
      * @param $data string
-     * @param $secretVal string
+     * @param $key string should be the AES key, either 16, 24, or 32 bytes to select
+     * @return false|string
+     */
+    public function decode($data, $key)
+    {
+        return zlib_decode($this->bytes2str($this->aesDecrypt($data, $this->str2bytes($key))));
+    }
+
+    /**
+     * @param $data array bytes
+     * @param $key array bytes
+     * @return false|string
+     */
+    private function aesEncrypt($data, $key)
+    {
+        $filledKey = $this->fillKey($key);
+        $key = $this->bytes2str($filledKey);
+        return openssl_encrypt($this->bytes2str($this->pkcs5Padding($data)),
+            $this->getAesAlgo(count($filledKey)), $key, OPENSSL_RAW_DATA, substr($key, 0, 16));
+    }
+
+    /**
+     * @param $data string
+     * @param $key array bytes
+     * @return array
+     */
+    private function aesDecrypt($data, $key)
+    {
+        $filledKey = $this->fillKey($key);
+        $key = $this->bytes2str($filledKey);
+        return $this->str2bytes(openssl_decrypt($data,
+            $this->getAesAlgo(count($filledKey)), $key, OPENSSL_RAW_DATA, substr($key, 0, 16)));
+    }
+
+    /**
+     * @param $length
      * @return string
      */
-    function exclusiveOr($data, $secretVal)
+    private function getAesAlgo($length)
     {
-        $data = $this->str2bytes($data);
-        $secretVal = $this->str2bytes($secretVal);
-        $dataLen = count($data);
-        $secretValLen = count($secretVal);
-
-        $result = [];
-        for ($i = 0; $i < $dataLen; $i++) {
-            $result[] = $data[$i]^$secretVal[$i%$secretValLen];
+        if ($length <= 16) {
+            return 'aes-128-cbc';
+        } elseif ($length >= 17 && $length <= 24) {
+            return 'aes-192-cbc';
         }
-        return $this->bytes2str($result);
+        return 'aes-256-cbc';
     }
 
     /**
@@ -67,5 +88,75 @@ class Encrypt
             $bytes[] = ord($string[$i]);
         }
         return $bytes;
+    }
+
+    /**
+     * @param $data array bytes
+     * @return array bytes
+     */
+    private function pkcs5Padding($data)
+    {
+        $padding = 16 - count($data) % 16;
+        $padText = [];
+        for ($i = 0; $i < $padding; $i++) {
+            $padText[] = $padding;
+        }
+        return array_merge($data, $padText);
+    }
+
+    /**
+     * @param $data array bytes
+     * @return array bytes
+     */
+    private function pkcs5UnPadding($data)
+    {
+        $len = count($data);
+        if ($len == 0) {
+            return $data;
+        }
+        $unPadding = (int)$data[$len-1];
+        return array_slice($data, 0, $len - $unPadding);
+    }
+
+    /**
+     * @param $key array bytes
+     * @return array bytes
+     */
+    private function fillKey($key)
+    {
+        $len = count($key);
+        if ($len == 16 || $len == 24 || $len == 32) {
+            return $key;
+        }
+        if ($len < 16) {
+            return $this->fillN($key, 16);
+        }
+        if ($len < 24) {
+            return $this->fillN($key, 24);
+        }
+        if ($len < 32) {
+            return $this->fillN($key, 32);
+        }
+        return array_slice($key, 0, 32);
+    }
+
+    /**
+     * @param $s array bytes
+     * @param $count integer
+     * @return array bytes
+     */
+    private function fillN($s, $count)
+    {
+        $len = count($s);
+        $div = intval(floor($count / $len));
+        $mod = $count % $len;
+        $arrayBytes = [];
+        for ($i = 0; $i < $div; $i++) {
+            $arrayBytes = array_merge($arrayBytes, $s);
+        }
+        if ($mod > 0) {
+            $arrayBytes = array_merge($arrayBytes, array_slice($s, 0, $mod));
+        }
+        return $arrayBytes;
     }
 }

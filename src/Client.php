@@ -51,15 +51,16 @@ class Client
     }
 
     /**
-     * @param $path string api request path
+     * @param $apiId string api id
      * @param $body array api request body
      * @return string
      */
-    public function call($path, $body)
+    public function call($apiId, $body)
     {
         $header = [];
         $header[clientId] = $this->clientId;
         $header[secretKey] = $this->secretKey;
+        $header[apiIdKey] = $apiId;
 
         $encrypt = new Encrypt();
         $encryptBody = '';
@@ -70,7 +71,7 @@ class Client
         // GuzzleHttp will throws exceptions when the response status code >= 400
         // https://docs.guzzlephp.org/en/latest/handlers-and-middleware.html#handlers
         try {
-            $resp = (new Request())->transfer(httpMethodPost, domain . $path, $header, $encryptBody, $this->runtimeMode);
+            $resp = (new Request())->http(httpMethodPost, $header, $encryptBody, $this->runtimeMode);
         } catch (GuzzleException $e) {
             $statusCode = $e->getCode();
             // http response status code > 400
@@ -107,19 +108,19 @@ class Client
                         return $this->setResponse(otherErrorCode, $respDecode);
                 }
             }
-            return $this->setResponse($msgArray['code'], $msgArray['msg'], $msgArray['data'] ?? null);
+            return $this->setResponse($msgArray['code'], $msgArray['msg'] ?? null, $msgArray['data'] ?? null);
         }
 
         return $this->setResponse(otherErrorCode, 'Unknown error occurred.');
     }
 
     /**
-     * @param $code string
+     * @param $code integer
      * @param $msg string
      * @param $data mixed
      * @return string
      */
-    public function setResponse($code, $msg, $data = null)
+    private function setResponse($code, $msg, $data = null)
     {
         return json_encode(new Response($code, $msg, $data));
     }

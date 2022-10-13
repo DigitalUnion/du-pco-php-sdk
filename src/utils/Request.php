@@ -23,21 +23,20 @@ class Request
 
     /**
      * @param $method string
-     * @param $url string
      * @param $header array
      * @param $body string
      * @return ResponseInterface
      * @throws GuzzleException
      */
-    public function transfer($method, $url, $header, $body, $runtimeMode)
+    public function http($method, $header, $body, $runtimeMode)
     {
         $options = [];
 
         $headers = [];
-        $headers[contentType] = contentTypeJson;
-        $headers[sdkVerKey] = $runtimeMode;
+        $headers[ucfirst(contentType)] = contentTypeJson;
+        $headers[ucfirst(sdkVerKey)] = $runtimeMode;
         foreach ($header as $key => $val) {
-            $headers[$key] = $val;
+            $headers[ucfirst($key)] = $val;
         }
         $options['headers'] = $headers;
 
@@ -45,6 +44,6 @@ class Request
             $options['body'] = $body;
         }
 
-        return $this->httpClient->request($method, $url, $options);
+        return $this->httpClient->request($method, domain, $options);
     }
 }

@@ -6,7 +6,8 @@
         "php": ">=7.0",
         "guzzlehttp/guzzle": "^7.5",
         "ext-zlib": "*",
-        "ext-json": "*"
+        "ext-json": "*",
+        "ext-openssl": "*"
     },
     "autoload": {
         "psr-4": {

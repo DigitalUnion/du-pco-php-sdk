@@ -5,7 +5,7 @@ namespace DigitalUnion\utils;
 class Response
 {
     /**
-     * @var string
+     * @var integer
      * Code response code
      *
      * |code  | describe                        |
