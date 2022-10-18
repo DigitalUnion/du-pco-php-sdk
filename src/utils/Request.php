@@ -22,13 +22,14 @@ class Request
     }
 
     /**
+     * @param $domain string
      * @param $method string
      * @param $header array
      * @param $body string
      * @return ResponseInterface
      * @throws GuzzleException
      */
-    public function http($method, $header, $body, $runtimeMode)
+    public function http($domain, $method, $header, $body, $runtimeMode)
     {
         $options = [];
 
@@ -44,6 +45,6 @@ class Request
             $options['body'] = $body;
         }
 
-        return $this->httpClient->request($method, domain, $options);
+        return $this->httpClient->request($method, $domain, $options);
     }
 }

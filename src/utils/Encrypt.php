@@ -6,7 +6,7 @@ class Encrypt
 {
     /**
      * @param $data string
-     * @param $key string should be the AES key, either 16, 24, or 32 bytes to select
+     * @param $key string should be the AES key, 16 bytes
      * @return false|string
      */
     public function encode($data, $key)
@@ -16,7 +16,7 @@ class Encrypt
 
     /**
      * @param $data string
-     * @param $key string should be the AES key, either 16, 24, or 32 bytes to select
+     * @param $key string should be the AES key, 16 bytes
      * @return false|string
      */
     public function decode($data, $key)
@@ -125,19 +125,13 @@ class Encrypt
     private function fillKey($key)
     {
         $len = count($key);
-        if ($len == 16 || $len == 24 || $len == 32) {
+        if ($len == 16) {
             return $key;
         }
         if ($len < 16) {
             return $this->fillN($key, 16);
         }
-        if ($len < 24) {
-            return $this->fillN($key, 24);
-        }
-        if ($len < 32) {
-            return $this->fillN($key, 32);
-        }
-        return array_slice($key, 0, 32);
+        return array_slice($key, 0, 16);
     }
 
     /**

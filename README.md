@@ -14,11 +14,11 @@ composer require digital-union/dupco
 **请务必安装并开启 `php` 的 `openssl` 扩展。**  
 
 更多信息请参考：  
-https://www.php.net/manual/zh/intro.mcrypt.php
-https://www.php.net/manual/zh/openssl.setup.php
+https://www.php.net/manual/zh/intro.mcrypt.php  
+https://www.php.net/manual/zh/openssl.installation.php
 
 ## Usage
-/example/index.php
+example/index.php:
 ```php
 require __DIR__ .'/../vendor/autoload.php';
 

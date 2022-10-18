@@ -27,6 +27,11 @@ class Client
     /**
      * @var string
      */
+    public $domain;
+
+    /**
+     * @var string
+     */
     public $runtimeMode;
 
     /**
@@ -71,7 +76,7 @@ class Client
         // GuzzleHttp will throws exceptions when the response status code >= 400
         // https://docs.guzzlephp.org/en/latest/handlers-and-middleware.html#handlers
         try {
-            $resp = (new Request())->http(httpMethodPost, $header, $encryptBody, $this->runtimeMode);
+            $resp = (new Request())->http($this->domain, httpMethodPost, $header, $encryptBody, $this->runtimeMode);
         } catch (GuzzleException $e) {
             $statusCode = $e->getCode();
             // http response status code > 400

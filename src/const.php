@@ -7,7 +7,8 @@ const fmtHttpCodeError = 'HTTP CODE:%d';
 
 const sdkVerKey = 'sdk_ver';
 const sdkVerForTest = 'test';
-const domain = 'http://data.shuzijz.cn/pco/data/sdk';
+const dataDomain = 'http://data.shuzijz.cn/pco/data/sdk';
+const baseDomain = 'http://data.shuzilm.cn/pco/base/sdk';
 const httpMethodPost = 'POST';
 const contentType = 'Content-Type';
 const contentTypeJson = 'application/json; charset=utf-8';
@@ -19,4 +20,4 @@ const pageNotFoundMsg = 'Request path error';
 const pathErrorCode = 2;
 const otherErrorCode = 10999;
 
-const sdkVer = 'v1.0.6';
+const sdkVer = 'v1.0.8';
