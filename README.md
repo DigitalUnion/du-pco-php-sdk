@@ -22,9 +22,9 @@ example/index.php:
 ```php
 require __DIR__ .'/../vendor/autoload.php';
 
-use DigitalUnion\Client;
+use DigitalUnion\DataClient;
 
-$client = new Client('cloud-test', 'aa', 'yDpDEihpUsF_RyWsCES1H');
+$client = new DataClient('cloud-test', 'aa', 'yDpDEihpUsF_RyWsCES1H');
 //$client->enableTestMode();
 
 $resp = $client->call('idmap-query-all', [
