@@ -36,7 +36,7 @@ $body = [
     'm' => '0',
 ];
 
-// ---------- 推送数据 ----------
+// ---------- 发送请求 ----------
 $client = new DataClient($clientId, $secretKey, $secretVal);
 //$client->enableTestMode();
 
