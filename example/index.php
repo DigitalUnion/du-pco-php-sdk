@@ -3,14 +3,31 @@
 require __DIR__ .'/../vendor/autoload.php';
 
 use DigitalUnion\DataClient;
+use DigitalUnion\utils\Encrypt;
 
-$client = new DataClient('cloud-test', 'aa', 'yDpDEihpUsF_RyWsCES1H');
-//$client->enableTestMode();
+$clientId = 'cloud-test';
+$secretKey = 'aa';
+$secretVal = 'yDpDEihpUsF_RyWsCES1H';
 
-$resp = $client->call('idmap-query-all', [
+$apiId = 'idmap-query-all';
+$body = [
     'f' => 'mac,imei',
     'k' => '868862032205613',
     'm' => '0',
-]);
+];
 
+// ---------- 推送数据 ----------
+$client = new DataClient($clientId, $secretKey, $secretVal);
+//$client->enableTestMode();
+
+$resp = $client->call($apiId, $body);
 var_dump($resp);
+
+// ---------- 加解密 ----------
+$encrypt = new Encrypt();
+
+$encode = $encrypt->encode(json_encode($body), $secretVal);
+var_dump($encode);
+
+$decode = $encrypt->decode($resp, $secretVal);
+var_dump($decode);
