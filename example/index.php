@@ -23,11 +23,9 @@ $client = new DataClient($clientId, $secretKey, $secretVal);
 $resp = $client->call($apiId, $body);
 var_dump($resp);
 
-// ---------- 加解密 ----------
+// ---------- 解密推送数据 ----------
 $encrypt = new Encrypt();
 
-$encode = $encrypt->encode(json_encode($body), $secretVal);
-var_dump($encode);
-
-$decode = $encrypt->decode($encode, $secretVal);
+$data = ""; // TODO 替换成需要解密的数据
+$decode = $encrypt->decode(base64_decode($data), $secretVal);
 var_dump($decode);
