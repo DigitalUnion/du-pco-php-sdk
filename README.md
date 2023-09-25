@@ -49,7 +49,7 @@ $encrypt = new Encrypt();
 $encode = $encrypt->encode(json_encode($body), $secretVal);
 var_dump($encode);
 
-$decode = $encrypt->decode($resp, $secretVal);
+$decode = $encrypt->decode($encode, $secretVal);
 var_dump($decode);
 ```
 
